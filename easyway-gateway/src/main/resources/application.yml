@@ -1,0 +1,42 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: easyway-gateway-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+zuul:
+  retryable: true
+  routes:
+    easyway-goods-service: /item/** #商品微服务
+#    easyway-search-service: /search/** #搜索微服务
+#    easyway-user-service: /user/** #用户微服务
+#    easyway-auth-service: /auth/** # 授权中心微服务
+#    easyway-cart-service: /cart/** # 购物车微服务
+    easyway-order-service: /order/** # 购物车微服务
+  add-host-header: true #携带请求本身的head头信息
+  sensitive-headers:  #配置禁止使用的头信息，这里设置为null，否者set-cookie无效
+  ignored-services:
+  strip-prefix: false
+ribbon:
+#  ReadTimeout: 5000
+#  SocketTimeout: 5000
+  ConnectTimeout: 250 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+hystrix: #熔断超时时间
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
