@@ -14,7 +14,7 @@ public class goodscontroller {
     @RequestMapping("/test")
     public String neworde(){
         orderservice.neworder();
-        return "OK";
+        return "OK65465";
     }
 }
 
